@@ -387,12 +387,14 @@ def edit_profile(request,pk):
 
 @login_required(login_url='login')
 def itemview(request):
+    company = company_details.objects.get(user = request.user)
     viewitem=AddItem.objects.all()
-    return render(request,'item_view.html',{'view':viewitem})
+    return render(request,'item_view.html',{'view':viewitem,'company':company})
 
 
 @login_required(login_url='login')
 def additem(request):
+    company=company_details.objects.get(user=request.user)
     unit=Unit.objects.all()
     sale=Sales.objects.all()
     purchase=Purchase.objects.all()
@@ -405,7 +407,7 @@ def additem(request):
     
     
 
-    return render(request,'additem.html',{'unit':unit,'sale':sale,'purchase':purchase,
+    return render(request,'additem.html',{'unit':unit,'sale':sale,'purchase':purchase,'company':company,
                
                             "account":account,"account_type":account_type,"accounts":accounts,"account_types":account_types,
                             
@@ -654,7 +656,8 @@ def add_sales(request):
 
 @login_required(login_url='login')
 def vendor(request):
-    return render(request,'create_vendor.html')
+    company=company_details.objects.get(user=request.user)
+    return render(request,'create_vendor.html',{'company':company})
 
 
 @login_required(login_url='login')
@@ -753,10 +756,11 @@ def sample(request):
     return redirect('base')
 
 def view_vendor_list(request):
+    company=company_details.objects.get(user=request.user)
     user_id=request.user.id
     udata=User.objects.get(id=user_id)
     data=vendor_table.objects.filter(user=udata)
-    return render(request,'vendor_list.html',{'data':data})
+    return render(request,'vendor_list.html',{'data':data,'company':company})
 
 def view_vendor_details(request,pk):
     user_id=request.user.id
@@ -955,16 +959,18 @@ def add_customer(request):
 
 @login_required(login_url='login')
 def retainer_invoice(request):
+    company=company_details.objects.get(user=request.user)
     invoices=RetainerInvoice.objects.all()
-    context={'invoices':invoices}
+    context={'invoices':invoices,'company':company}
     return render(request,'retainer_invoice.html',context)
 
 
 
 @login_required(login_url='login')
 def add_invoice(request):
+    company=company_details.objects.get(user_id=request.user)
     customer1=customer.objects.all()   
-    context={'customer1':customer1,}    
+    context={'customer1':customer1,'company':company}    
     return render(request,'add_invoice.html',context)
 
 @login_required(login_url='login')
@@ -1564,6 +1570,7 @@ def payment_term(request):
 @login_required(login_url='login')
 
 def invoiceview(request):
+    company=company_details.objects.get(user=request.user)
     invoicev=invoice.objects.all()
     
     if not payment_terms.objects.filter(Terms='net 15').exists(): 
@@ -1576,6 +1583,7 @@ def invoiceview(request):
     
     context={
         'invoice':invoicev,
+        'company':company
         
     }
     return render(request,'invoiceview.html',context)
@@ -1642,6 +1650,7 @@ def addinvoice(request):
 @login_required(login_url='login')
 
 def add_prod(request):
+    company=company_details.objects.get(user=request.user)
     c=customer.objects.all()
     p=AddItem.objects.all()
     i=invoice.objects.all()
@@ -1716,6 +1725,7 @@ def add_prod(request):
             'p':p,
             'i':i,
             'pay':pay,
+            'company':company,
     }       
     return render(request,'createinvoice.html',context)
 
@@ -2086,10 +2096,13 @@ def payment_term_for_invoice(request):
         ptr.save()
         return redirect("add_prod")
         
-        
+
+@login_required(login_url='login')
 def addprice(request):
+    company=company_details.objects.get(user=request.user)
     add=AddItem.objects.all()
-    return render(request,'addprice_list.html',{'add':add})
+    return render(request,'addprice_list.html',{'add':add,'company':company})
+
 def addpl(request):
     print('hi')
     if request.method == "POST":
@@ -2158,8 +2171,9 @@ def active_status(request, id):
     return render(request, 'view_price_list.html', {'view': viewitem})
 
 def viewpricelist(request):
+    company = company_details.objects.get(user = request.user)
     view=Pricelist.objects.all()                                                                                                                                                                                                                                                                                                                        
-    return render(request,'view_price_list.html',{'view':view})
+    return render(request,'view_price_list.html',{'view':view,'company':company})
 def viewlist(request,id):
     user_id=request.user
     items=Pricelist.objects.all()
@@ -2342,6 +2356,7 @@ def banking_delete(request,id):
     
 @login_required(login_url='login')
 def recurringhome(request):
+    company = company_details.objects.get(user = request.user)
     selected_vendor_id = request.GET.get('vendor')
     vendors = vendor_table.objects.filter(user=request.user)
     selected_vendor = vendor_table.objects.filter(id=selected_vendor_id).first()
@@ -2350,6 +2365,7 @@ def recurringhome(request):
         'vendors': vendors,
         'selected_vendor_id': selected_vendor_id,
         'gst_number': gst_number,
+        'company':company,
     })
 
 
@@ -2394,8 +2410,9 @@ def add_expense(request):
 
 @login_required(login_url='login')
 def recurringbase(request):
+    company=company_details.objects.get(user=request.user)
     expenses = Expense.objects.all()
-    return render(request, 'recurring_base.html',{'expenses': expenses})
+    return render(request, 'recurring_base.html',{'expenses': expenses,'company':company})
 
 def show_recurring(request, expense_id):
     expense = get_object_or_404(Expense, id=expense_id)
@@ -3785,8 +3802,9 @@ def new_recur(request):
 
 
 def view_recurpage(request):
+    company=company_details.objects.get(user=request.user)
     recur=recurring_invoice.objects.all()
-    return render(request,'viewrecurpage.html',{'recur':recur})
+    return render(request,'viewrecurpage.html',{'recur':recur,'company':company})
 
 def viewrecur(request,id):
     cust = customer.objects.filter(user_id=request.user.id)
@@ -5183,7 +5201,8 @@ def payment_termA(request):
         
         
 def dashboard(request):
-    return render(request,'Dashboard.html')
+    company=company_details.objects.get(user=request.user)
+    return render(request,'Dashboard.html',{'company':company})
     
     
 def delete_customr(request,id):
@@ -5192,8 +5211,9 @@ def delete_customr(request,id):
     return redirect('view_customr')
     
 def view_customr(request):
+    company=company_details.objects.get(user=request.user)
     vc=customer.objects.all()
-    return render(request,'view_customer.html',{'vc':vc})
+    return render(request,'view_customer.html',{'vc':vc,'company':company})
     
 def view_customr_sname(request):
     vc=customer.objects.order_by('customerName')
@@ -5276,15 +5296,17 @@ def add_email_customer(request):
     
     
 def paymentmethod(request):
+    company=company_details.objects.get(user=request.user)
     paymnt = payment_made_items.objects.all()
     vendor = vendor_table.objects.all()
-    context = {'paymnt':paymnt,'vendor':vendor}
+    context = {'paymnt':paymnt,'vendor':vendor,'company':company}
     return render (request,'payment_method.html',context)
 
 
 def paymentadd_method(request):
+    company=company_details.objects.get(user=request.user)
     vendors = vendor_table.objects.all()
-    context = {'vendors':vendors}
+    context = {'vendors':vendors,'company':company}
     return render(request,'payment_method_add.html',context)
 
 
@@ -5356,6 +5378,7 @@ def payment_edit_view(request,pk):
     return render(request, 'payment_details_edit.html',{'payment': payment})
     
 def purchase_order(request):
+    company=company_details.objects.get(user=request.user)
     vendor=vendor_table.objects.all()
     cust=customer.objects.filter(user = request.user)
     payment=payment_terms.objects.all()
@@ -5373,6 +5396,7 @@ def purchase_order(request):
         'units':unit,
         'sales':sales,
         'purchase':purchase,
+        'company':company,
         
     }
         
@@ -6134,11 +6158,12 @@ def Approved(request,id):
 
 
 def chartofaccount_home(request):
+    company=company_details.objects.get(user=request.user)
     cur_user = request.user
     user = User.objects.get(id=cur_user.id)
     # view=Chart_of_Account.objects.filter(user=user)
     view=Chart_of_Account.objects.all()
-    return render(request,"chartofaccount_home.html", {'view':view})
+    return render(request,"chartofaccount_home.html", {'view':view,'company':company})
 
 def create_account(request):
     if request.method=='POST':
@@ -6517,6 +6542,7 @@ def download_chart_of_account(request,pk):
     return response
 
 def proj(request):
+    company=company_details.objects.get(user=request.user)
     user_id=request.user.id
     udata=User.objects.get(id=user_id)
     data=customer.objects.all()
@@ -6527,14 +6553,14 @@ def proj(request):
     uz=usernamez.objects.all()
     uc=usercreate.objects.all()
     
-    return render(request,'proj.html',{'data':data,'u':u,'tasks':tasks,'uz':uz,'uc':uc})
+    return render(request,'proj.html',{'data':data,'u':u,'tasks':tasks,'uz':uz,'uc':uc,'company':company})
     
 def vproj(request):
-   
+    company=company_details.objects.get(user=request.user)
     proj=project1.objects.filter(user=request.user)
     tsk=task.objects.all()
     active=Project.objects.all()
-    return render(request,'projlist.html',{'proj':proj,'tsk':tsk,'active':active})
+    return render(request,'projlist.html',{'proj':proj,'tsk':tsk,'active':active,'company':company})
     
     
 def addproj(request):
@@ -6759,9 +6785,10 @@ def drf(request):
 
 
 def add_customers(request):
+    company=company_details.objects.get(user=request.user)
     sb=payment_terms.objects.all()
     hi=Pricelist.objects.all()
-    return render(request,'customer.html',{'sb':sb,'hi':hi})
+    return render(request,'customer.html',{'sb':sb,'hi':hi,'company':company})
     
 def profileasc(request):
     cmp1 = company_details.objects.get(user=request.user)
