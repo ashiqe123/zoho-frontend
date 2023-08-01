@@ -28,7 +28,7 @@
 </head>
 <style>
   .sidebar {
-    min-height: calc(100vh - 70px);
+    min-height: calc(150vh - 70px);
     background: transparent;
     font-weight: normal;
     padding: 0;
@@ -351,8 +351,8 @@
 }
 
 .menu-items{
-  margin-top: 2%;
-  margin-bottom: 2%;
+  margin-top: 1%;
+  margin-bottom: 1%;
  
 }
 
@@ -410,25 +410,8 @@ nav .search-bar-container label:hover{
   position: relative;
 }
 
-.dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: #f9f9f9;
-  min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-  padding: 12px 16px;
-}
 
-.dropdown-content a {
-  color: black;
-  text-decoration: none;
-  display: block;
-  padding: 6px 0;
-}
 
-.dropdown-content a:hover {
-  background-color: #f1f1f1;
-}
 
 /* Show dropdown on hover */
 .icons:hover .dropdown-content {
@@ -892,23 +875,12 @@ $(document).ready(function() {
           <li>
             <div class="icons">
               <i class="far fa-bell" style="font-size:30px;"></i>
-              <div class="dropdown-content" id="bell-dropdown">
-                <!-- Dropdown content for bell icon -->
-                <a href="#">Notification 1</a>
-                <a href="#">Notification 2</a>
-                <a href="#">Notification 3</a>
-              </div>
+             
             </div>
           </li>
           <li>
             <div class="icons">
               <i class="fa fa-gear" style="font-size:30px;"></i>
-              <div class="dropdown-content" id="gear-dropdown">
-                <!-- Dropdown content for gear icon -->
-                <a href="#">Setting 1</a>
-                <a href="#">Setting 2</a>
-                <a href="#">Setting 3</a>
-              </div>
             </div>
           </li>
             <li class="nav-item dropdown">

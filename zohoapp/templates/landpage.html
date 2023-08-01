@@ -1,8 +1,8 @@
-
-
 {% extends 'home.html' %}
 {% block content %}
 {% load static %}
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
     <style>
        .footer {
         background-color: #f2f2f2;
@@ -61,35 +61,7 @@
   </div>
 </section>
 
-    
-<section class="container-fluid" id="about">
-  <center>
-    <h4 class="p-3 text-dark">About Us</h4> 
-  </center>
- 
-  <section class="about-us">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-6">
-          <h2>About Our Accounting Firm</h2>
-          <p>
-            [Your accounting firm name] is a trusted and reputable accounting firm dedicated to providing top-notch financial services and solutions. With a team of highly skilled and experienced accountants, we cater to businesses of all sizes and individuals seeking professional financial guidance.
-          </p>
-          <p>
-            Our mission is to help our clients achieve their financial goals and navigate the complexities of accounting and tax regulations with ease. We believe in fostering long-term relationships with our clients based on integrity, transparency, and exceptional service.
-          </p>
-          <p>
-            At [Your accounting firm name], we understand the unique challenges businesses face, and our comprehensive range of services is designed to address each client's specific needs effectively.
-          </p>
-        </div>
-        <div class="col-md-6">
-         <img width="100%" src="https://img.freepik.com/free-photo/businessmen-hands-white-table-with-documents-drafts_176420-351.jpg?w=740&t=st=1690007487~exp=1690008087~hmac=2af02df3bd4d03a35f3917da10c000c2e7222cba07a7d2b1f9b5870ed005cff3" alt="">
-        </div>
-      </div>
-    </div>
-  </section>
-  
-</section>
+
 
 
 <section class="container-fluid tbanner" id="Services">
@@ -161,7 +133,7 @@
 </div>
 </section>
 
-<section class="container-fluid" style="background-color: black;" id="contact">
+<section class="container-fluid mt-3 mb-3" style="background-color: black;height: 100%;" id="contact">
   <center>
     <h5 class="p-3 text-white">Contact Us</h5>
   </center>
@@ -170,13 +142,40 @@
       <!-- First column for Address Card -->
       <div class="col-md-6">
        
-        <div class="card " style="width: 100%;height: 98%;">
-          <div class="card-body mt-5">
+        <div class="card " style="width: 100%;height:50%;">
+          <div class="card-body ">
             <center>
-            <h5 class="card-title"> Company </h5>
+            <h5 class="card-title"> <i class="fa fa-map-marker" style="font-size:36px"></i>
+            </h5>
             <p class="card-text">Carnival infopark phase 1 ,fist floor .</p>
             <p class="card-text">infopark campus kakkand kochi.</p>
           </center>
+          </div>
+        </div>
+        <div class="row mt-3 mb-5">
+          <div class="col-sm-6">
+            <div class="card " >
+              <div class="card-body ">
+                <center>
+                <h5 class="card-title"> <i class="fa fa-phone" style="font-size:36px"></i>
+                </h5>
+                <p class="card-text">9008635530</p>
+                <p class="card-text">9087654328</p>
+              </center>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="card " >
+              <div class="card-body ">
+                <center>
+                <h5 class="card-title"> <i class="fa fa-envelope" style="font-size:36px"></i>
+                </h5>
+                <p class="card-text">demozoh@gmail.com</p>
+                <p class="card-text">zohoadmin@gmail.com</p>
+              </center>
+              </div>
+            </div>
           </div>
         </div>
        
@@ -186,13 +185,41 @@
       <div class="col-md-6">
         <!-- Replace the iframe src attribute with your Google Maps embed code -->
         <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d12345.6789!2d-71.0589!3d42.3601!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89e3659bf7f0eeb7%3A0x383ddecdecb1a6b2!2sBoston%2C%20MA%2C%20USA!5e0!3m2!1sen!2sin!4v1627023087472!5m2!1sen!2sin" 
-        width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+        width="100%" height="320" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
       </div>
     </div>
   </div>
   
 </section>
-
+    
+<section class="container-fluid mt-5 mb-5" id="about">
+  <center>
+    <h4 class="p-3 text-dark">About Us</h4> 
+  </center>
+ 
+  <section class="about-us">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <h2>About Our Accounting Firm</h2>
+          <p>
+            [Your accounting firm name] is a trusted and reputable accounting firm dedicated to providing top-notch financial services and solutions. With a team of highly skilled and experienced accountants, we cater to businesses of all sizes and individuals seeking professional financial guidance.
+          </p>
+          <p>
+            Our mission is to help our clients achieve their financial goals and navigate the complexities of accounting and tax regulations with ease. We believe in fostering long-term relationships with our clients based on integrity, transparency, and exceptional service.
+          </p>
+          <p>
+            At [Your accounting firm name], we understand the unique challenges businesses face, and our comprehensive range of services is designed to address each client's specific needs effectively.
+          </p>
+        </div>
+        <div class="col-md-6">
+         <img width="100%" src="https://img.freepik.com/free-photo/businessmen-hands-white-table-with-documents-drafts_176420-351.jpg?w=740&t=st=1690007487~exp=1690008087~hmac=2af02df3bd4d03a35f3917da10c000c2e7222cba07a7d2b1f9b5870ed005cff3" alt="">
+        </div>
+      </div>
+    </div>
+  </section>
+  
+</section>
 <footer class="footer container-fluid">
   <div class="container">
     <div class="row">
