@@ -547,7 +547,7 @@ def edititem(request,id):
     p=Purchase.objects.all()
     s=Sales.objects.all()
     u=Unit.objects.all()
-
+    company=company_details.objects.get(user=request.user)
     accounts = Purchase.objects.all()
     account_types = set(Purchase.objects.values_list('Account_type', flat=True))
     
@@ -556,7 +556,7 @@ def edititem(request,id):
     account = Sales.objects.all()
     account_type = set(Sales.objects.values_list('Account_type', flat=True))
     
-    return render(request,'edititem.html',{"account":account,"account_type":account_type,'e':pedit,'p':p,'s':s,'u':u,"accounts":accounts,"account_types":account_types})
+    return render(request,'edititem.html',{"account":account,"account_type":account_type,'e':pedit,'p':p,'s':s,'u':u,"accounts":accounts,"account_types":account_types,"company":company})
 
 
 
@@ -588,7 +588,7 @@ def edit_db(request,id):
 
 @login_required(login_url='login')
 def detail(request,id):
-    user_id=request.user
+    company=company_details.objects.get(user=request.user)
     items=AddItem.objects.all()
     product=AddItem.objects.get(id=id)
     history=History.objects.filter(p_id=product.id)
@@ -599,7 +599,7 @@ def detail(request,id):
        "allproduct":items,
        "product":product,
        "history":history,
-      
+       'company':  company,    
     }
     
     return render(request,'demo.html',context)
@@ -763,6 +763,7 @@ def view_vendor_list(request):
     return render(request,'vendor_list.html',{'data':data,'company':company})
 
 def view_vendor_details(request,pk):
+    company=company_details.objects.get(user=request.user)
     user_id=request.user.id
     udata=User.objects.get(id=user_id)
     vdata1=vendor_table.objects.filter(user=udata)
@@ -771,7 +772,7 @@ def view_vendor_details(request,pk):
     ddata=doc_upload_table.objects.filter(user=udata,vendor=vdata2)
     cmt_data=comments_table.objects.filter(user=udata,vendor=vdata2)
 
-    return render(request,'vendor_details.html',{'vdata':vdata1,'vdata2':vdata2,'mdata':mdata,'ddata':ddata,'cmt_data':cmt_data})
+    return render(request,'vendor_details.html',{'company':company,'vdata':vdata1,'vdata2':vdata2,'mdata':mdata,'ddata':ddata,'cmt_data':cmt_data})
 
 def add_comment(request,pk):
     p=Purchase_Order.objects.get(id=pk)
@@ -793,6 +794,7 @@ def sendmail(request):
 
 
 def edit_vendor(request,pk):
+    company=company_details.objects.get(user=request.user)
     vdata=vendor_table.objects.get(id=pk)
     if remarks_table.objects.filter(vendor=vdata).exists() or contact_person_table.objects.filter(vendor=vdata).exists():
         if remarks_table.objects.filter(vendor=vdata).exists() and contact_person_table.objects.filter(vendor=vdata).exists():
@@ -808,7 +810,7 @@ def edit_vendor(request,pk):
                 return render(request,'edit_vendor.html',{'vdata':vdata,'pdata':pdata})      
         
     else:
-        return render(request,'edit_vendor.html',{'vdata':vdata})
+        return render(request,'edit_vendor.html',{'vdata':vdata,"company":company})
 
 
 def edit_vendor_details(request,pk):
@@ -1039,11 +1041,12 @@ def create_invoice_send(request):
 
 @login_required(login_url='login')
 def invoice_view(request,pk):
+    company=company_details.objects.get(user_id=request.user)
     invoices=RetainerInvoice.objects.all()
     invoice=RetainerInvoice.objects.get(id=pk)
     item=Retaineritems.objects.filter(retainer=pk)
 
-    context={'invoices':invoices,'invoice':invoice,'item':item}
+    context={'invoices':invoices,'invoice':invoice,'item':item,"company":company}
     return render(request,'invoice_view.html',context)
 
 @login_required(login_url='login')
@@ -1053,10 +1056,11 @@ def retainer_template(request,pk):
 
 @login_required(login_url='login')
 def retainer_edit_page(request,pk):
+    company=company_details.objects.get(user_id=request.user)
     invoice=RetainerInvoice.objects.get(id=pk)
     customer1=customer.objects.all()
     items=Retaineritems.objects.filter(retainer=pk)
-    context={'invoice':invoice, 'customer1':customer1,'items':items}
+    context={'invoice':invoice, 'customer1':customer1,'items':items,'company':company}
     return render(request,'retainer_invoice_edit.html', context)
 
 
@@ -1602,6 +1606,7 @@ def detailedview(request,id):
         'invoiceitem':invoiceitem,
         'comp':company,
         'invoice':inv_master,
+        "company":company,
         
                     }
     return render(request,'invoice_det.html',context)
@@ -1761,6 +1766,7 @@ def add_cx(request):
 
 def edited_prod(request,id):
     print(id)
+    company = company_details.objects.get(user = request.user)
     c = customer.objects.all()
     p = AddItem.objects.all()
     invoiceitem = invoice_item.objects.filter(inv_id=id)
@@ -1829,6 +1835,7 @@ def edited_prod(request,id):
             'inv': invoiceitem,
             'i': invoic,
             'pay':pay,
+            "company":company,
         }             
         
     return render(request, 'invoiceedit.html', context)
@@ -2175,7 +2182,7 @@ def viewpricelist(request):
     view=Pricelist.objects.all()                                                                                                                                                                                                                                                                                                                        
     return render(request,'view_price_list.html',{'view':view,'company':company})
 def viewlist(request,id):
-    user_id=request.user
+    company = company_details.objects.get(user = request.user)
     items=Pricelist.objects.all()
     product=Pricelist.objects.get(id=id)
     print(product.id)
@@ -2184,15 +2191,17 @@ def viewlist(request,id):
     context={
        "allproduct":items,
        "product":product,
+       'company':company,
       
     }
     
     return render(request,'list.html',context)
 
 def editlist(request,id):
+    company = company_details.objects.get(user = request.user)
     editpl=Pricelist.objects.get(id=id)
     sam=Sample_table.objects.filter(pl=id)
-    return render(request,'edit_pricelist.html',{'editpl':editpl,'sam':sam})
+    return render(request,'edit_pricelist.html',{'editpl':editpl,'sam':sam,"company":company})
 def editpage(request,id):
     if request.method=='POST':
         edit=Pricelist.objects.get(id=id)
@@ -2415,6 +2424,7 @@ def recurringbase(request):
     return render(request, 'recurring_base.html',{'expenses': expenses,'company':company})
 
 def show_recurring(request, expense_id):
+    company=company_details.objects.get(user=request.user)
     expense = get_object_or_404(Expense, id=expense_id)
     expenses = Expense.objects.all()
 
@@ -2435,14 +2445,16 @@ def show_recurring(request, expense_id):
 
     comments = Comment.objects.filter(profile_name=expense.profile_name, expense=expense)
 
-    return render(request, 'show_recurring.html', {'expense': expense, 'expenses': expenses, 'comments': comments})
+    return render(request, 'show_recurring.html', {'company':company,'expense': expense, 'expenses': expenses, 'comments': comments})
 
 
 def expense_details(request):
+    company=company_details.objects.get(user=request.user)
     expenses = Expense.objects.all()
-    return render(request, 'recurring_base.html',{'expenses': expenses})
+    return render(request, 'recurring_base.html',{'expenses': expenses,'company':company})
     
 def edit_expense(request, expense_id):
+    company=company_details.objects.get(user=request.user)
     expense = get_object_or_404(Expense, id=expense_id)
     vendors = vendor_table.objects.all()
     customers = customer.objects.all()  # Fetch all customers
@@ -2471,7 +2483,7 @@ def edit_expense(request, expense_id):
         return redirect('recurringbase')
 
     else:
-        return render(request, 'edit_expense.html', {'expense': expense, 'vendors': vendors, 'customers': customers})    
+        return render(request, 'edit_expense.html', {'expense': expense,'company':company, 'vendors': vendors, 'customers': customers})    
         
 @login_required(login_url='login')
 def newexp(request):
@@ -3807,7 +3819,7 @@ def view_recurpage(request):
     return render(request,'viewrecurpage.html',{'recur':recur,'company':company})
 
 def viewrecur(request,id):
-    cust = customer.objects.filter(user_id=request.user.id)
+    cust = customer.objects.filter(user=request.user)
     company=company_details.objects.get(user_id=request.user.id)
     items=recurring_invoice.objects.all()
     product=recurring_invoice.objects.get(id=id)
@@ -3820,18 +3832,20 @@ def viewrecur(request,id):
        "allproduct":items,
        "product":product,
       "itemstable":table,
-      "comp":company,
+      "company":company,
     }
     
     return render(request,'recur_invoice.html',context)
 
 
 def edit_recur(request,id):
+    company=company_details.objects.get(user_id=request.user.id)
+
     item=AddItem.objects.all()
     cus=customer.objects.all()
     editr=recurring_invoice.objects.get(id=id)
     tab=recur_itemtable.objects.filter(ri=id)
-    return render(request,'edit_recur.html',{'editr':editr,'cus':cus,'tab':tab,'item':item})
+    return render(request,'edit_recur.html',{'editr':editr,'cus':cus,'tab':tab,'item':item,"company":company,})
 
 def editrecurpage(request,id):
     if request.method=='POST':
@@ -5216,23 +5230,27 @@ def view_customr(request):
     return render(request,'view_customer.html',{'vc':vc,'company':company})
     
 def view_customr_sname(request):
+    company=company_details.objects.get(user=request.user)
     vc=customer.objects.order_by('customerName')
-    return render(request,'view_customer.html',{'vc':vc})
+    return render(request,'view_customer.html',{'vc':vc,'company':company})
     
 def view_customr_scpname(request):
+    company=company_details.objects.get(user=request.user)
     vc=customer.objects.order_by('companyName')
-    return render(request,'view_customer.html',{'vc':vc})
+    return render(request,'view_customer.html',{'vc':vc,'company':company})
     
 def view_one_customer(request,id):
+    company=company_details.objects.get(user=request.user)
     vc=customer.objects.all()
     cu=customer.objects.get(id=id)
-    return render(request,'view_one_customer.html',{'vc':vc,'cu':cu})
+    return render(request,'view_one_customer.html',{'vc':vc,'cu':cu,"company":company})
     
 def editcustomer(request,id):
+    company=company_details.objects.get(user=request.user)
     cu=customer.objects.get(id=id)
     pt=payment_terms.objects.all()
   
-    return render(request,'edit_customer.html',{'cu':cu,'pt':pt})
+    return render(request,'edit_customer.html',{'cu':cu,'pt':pt,'company':company})
     
 def editEnter_customer(request,id):
         if request.method=='POST':
@@ -5343,19 +5361,22 @@ def payment_add_details(request):
 
     
 def payment_details_view(request, pk):
+    company=company_details.objects.get(user=request.user)
     payment = get_object_or_404(payment_made_items, id=pk)
     vendors = vendor_table.objects.all()
     # Retrieve the queryset of payment_made_items objects you want to display in the template
     # For example, if you want to display all payment_made_items objects, you can do:
     payment_items = payment_made_items.objects.all()  
-    return render(request, 'payment_details.html', {'payment': payment, 'vendors': vendors, 'payment_items': payment_items})
+    return render(request, 'payment_details.html', {'payment': payment,'company':company, 'vendors': vendors, 'payment_items': payment_items})
+
 
 
 def payment_edit(request):
+    company=company_details.objects.get(user=request.user)
     payment_id = request.GET.get('payment_id')
     payment = get_object_or_404(payment_made_items,id=payment_id)
     vendor = vendor_table.objects.all()
-    return render(request,'payment_details_edit.html',{'payment':payment,'vendor':vendor})
+    return render(request,'payment_details_edit.html',{'payment':payment,'vendor':vendor,'company':company})
 
 
 def payment_edit_view(request,pk):
@@ -5949,6 +5970,7 @@ def export_purchase_pdf(request,id):
 
 
 def edit(request,pk):
+    company = company_details.objects.get(user = request.user)
     vendor=vendor_table.objects.all()
     cust=customer.objects.filter(user = request.user)
     payment=payment_terms.objects.all()
@@ -5970,6 +5992,7 @@ def edit(request,pk):
         'purchase':purchase,
         'po':po,        
         'po_table':po_tabl,
+        'company':company
     }
     return render(request,'edit_purchase_order.html',context)
     
@@ -6115,18 +6138,21 @@ def edit_Purchase_order(request,id):
     
     
 def change_status(request,pk):
+    company = company_details.objects.get(user = request.user)
     pur=Purchase_Order.objects.get(id=pk)
     pur.status='Approved'
     pur.save()
     return redirect('purchase_bill_view',pk)
     
 def change_status_draft(request,pk):
+    company = company_details.objects.get(user = request.user)
     pur=Purchase_Order.objects.get(id=pk)
     pur.status='Draft'
     pur.save()
     return redirect('purchase_bill_view',pk)
     
 def draft(request,id):
+    company = company_details.objects.get(user = request.user)
     po_table=Purchase_Order.objects.all()
     po=Purchase_Order.objects.filter(status='Draft')
     company=company_details.objects.get(user_id=request.user.id)
@@ -6136,11 +6162,13 @@ def draft(request,id):
         'company':company,
         'po_table':po_table,
         'po_item':po_item,
+        'company':company,
     }
     return render(request,"purchase_bill_view.html",context)
     
     
 def Approved(request,id):
+    company = company_details.objects.get(user = request.user)
     po_table=Purchase_Order.objects.all()
     po=Purchase_Order.objects.filter(status='Approved')
     company=company_details.objects.get(user_id=request.user.id)
@@ -6150,6 +6178,7 @@ def Approved(request,id):
         'company':company,
         'po_table':po_table,
         'po_item':po_item,
+        'company':company,
     }
     return render(request,"purchase_bill_view.html",context)
     
@@ -6268,6 +6297,7 @@ def create_account(request):
 
 
 def chartofaccount_view(request,id):
+    company=company_details.objects.get(user=request.user)
     cur_user = request.user
     user = User.objects.get(id=cur_user.id)
     # view=Chart_of_Account.objects.filter(user=user)
@@ -6277,7 +6307,7 @@ def chartofaccount_view(request,id):
 
     doc=Chart_of_Account_Upload.objects.filter(account=ind)
     print(view)
-    return render(request,"chartofaccount_view.html", {'view':view,'ind':ind,'doc':doc}) 
+    return render(request,"chartofaccount_view.html", {'view':view,'ind':ind,'doc':doc,'company':company}) 
 
 def create_account_view(request):
     if request.method=='POST':
@@ -6611,6 +6641,7 @@ def addproj(request):
 
 
 def overview(request,id):
+    company=company_details.objects.get(user=request.user)
     proj=project1.objects.filter(id=id)
     print(proj)
     proje=project1.objects.filter(user=request.user)
@@ -6620,7 +6651,7 @@ def overview(request,id):
     project = get_object_or_404(project1, id=id)
     
 
-    return render(request,'overview.html',{'proj':proj,'proje':proje,'usern':usern,'taskz':taskz,'project':project})
+    return render(request,'overview.html',{'proj':proj,'company':company,'proje':proje,'usern':usern,'taskz':taskz,'project':project})
 
 def comment(request):
     product_id = request.GET.get('product_id') # Retrieve the product ID from the AJAX request
@@ -6661,13 +6692,14 @@ def commentdb(request, id):
  
 
 def editproj(request,id):
+    company=company_details.objects.get(user=request.user)
     proj=project1.objects.get(id=id)
     proje=project1.objects.all()
     data=customer.objects.all()
     uc=usercreate.objects.all()
     usern=usernamez.objects.filter(projn=id)
     taskz=task.objects.filter(proj=id)
-    return render(request,'editoverview.html',{'data':data,'proj':proj,'proje':proje,'uc':uc,'usern':usern,'taskz':taskz})
+    return render(request,'editoverview.html',{'company':company,'data':data,'proj':proj,'proje':proje,'uc':uc,'usern':usern,'taskz':taskz})
     
     
     
@@ -6775,38 +6807,45 @@ def itemdata_challan_save(request):
 
 
 def apr(request):
+    company = company_details.objects.get(user=request.user)
     pt=Purchase_Order.objects.filter(status='Approved')
-    return render(request,'purchase_order.html',{'pt':pt})
+    return render(request,'purchase_order.html',{'pt':pt,"company":company})
 
 
 def drf(request):
+    company = company_details.objects.get(user=request.user)
     pt=Purchase_Order.objects.filter(status='Draft')
-    return render(request,'purchase_order.html',{'pt':pt})
+    return render(request,'purchase_order.html',{'pt':pt,"company":company})
 
 
 def add_customers(request):
-    company=company_details.objects.get(user=request.user)
+    
+    company = company_details.objects.get(user=request.user)
     sb=payment_terms.objects.all()
     hi=Pricelist.objects.all()
     return render(request,'customer.html',{'sb':sb,'hi':hi,'company':company})
     
 def profileasc(request):
+    company = company_details.objects.get(user=request.user)
     cmp1 = company_details.objects.get(user=request.user)
     rec_bill = recurring_invoice.objects.filter(user=request.user).order_by('name')
     context = {
         'recur': rec_bill,
         'cmp1': cmp1,
+        "company":company,
     }
     return render(request, 'viewrecurpage.html', context)
     
     
 def profiledesc(request):
+    company = company_details.objects.get(user=request.user)
     cmp1 = company_details.objects.get(user = request.user)
     rec_bill =recurring_invoice.objects.filter(user = request.user).order_by('-name')
 
     context = {
             'recur':rec_bill,
-            'cmp1': cmp1
+            'cmp1': cmp1,
+            "company":company,
             }
     return render(request,'viewrecurpage.html',context)
     
